@@ -1,8 +1,11 @@
 // my-portfolio/backend/server.js
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 
+const __dirname = path.resolve();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -27,9 +30,7 @@ app.post('/api/login', (req, res) => {
 });
 
 
-import fs from 'fs';
-import path from 'path';
-const __dirname = path.resolve();
+
 
 const DETAILS_PATH = path.join(__dirname, 'data', 'details.json');
 
@@ -63,6 +64,73 @@ app.post('/api/details', authMiddleware, (req, res) => {
 app.delete('/api/details', authMiddleware, (req, res) => {
     fs.writeFileSync(DETAILS_PATH, '{}');
     res.json({ message: 'Details deleted' });
+}); x
+
+
+const EXPERIENCE_PATH = path.join(__dirname, 'data', 'experience.json');
+
+// helper to read/write
+function readExperiences() {
+    const raw = fs.readFileSync(EXPERIENCE_PATH, 'utf-8');
+    return JSON.parse(raw);
+}
+function writeExperiences(data) {
+    fs.writeFileSync(EXPERIENCE_PATH, JSON.stringify(data, null, 2));
+}
+
+// ─── Get all experiences ─────────────────────────────────────
+app.get('/api/experience', authMiddleware, (req, res) => {
+    const list = readExperiences();
+    // sort newest (by year, month) first
+    list.sort((a, b) => {
+        const da = new Date(a.startYear, a.startMonthIndex);
+        const db = new Date(b.startYear, b.startMonthIndex);
+        return db - da;
+    });
+    res.json(list);
+});
+
+// ─── Create a new experience ────────────────────────────────
+app.post('/api/experience', authMiddleware, (req, res) => {
+    const experience = req.body;
+    const list = readExperiences();
+    // generate a simple unique id
+    experience.id = Date.now().toString();
+    // convert month name to index for sorting
+    experience.startMonthIndex = new Date(`${experience.startMonth} 1, 2000`).getMonth();
+    experience.endMonthIndex = experience.endMonth
+        ? new Date(`${experience.endMonth} 1, 2000`).getMonth()
+        : null;
+    list.push(experience);
+    writeExperiences(list);
+    res.json(experience);
+});
+
+// ─── Update an existing experience ───────────────────────────
+app.put('/api/experience/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    const updated = req.body;
+    const list = readExperiences().map(exp => {
+        if (exp.id === id) {
+            // recalc month indices
+            updated.startMonthIndex = new Date(`${updated.startMonth} 1, 2000`).getMonth();
+            updated.endMonthIndex = updated.endMonth
+                ? new Date(`${updated.endMonth} 1, 2000`).getMonth()
+                : null;
+            return { ...updated, id };
+        }
+        return exp;
+    });
+    writeExperiences(list);
+    res.json(updated);
+});
+
+// ─── Delete an experience ────────────────────────────────────
+app.delete('/api/experience/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    let list = readExperiences().filter(exp => exp.id !== id);
+    writeExperiences(list);
+    res.json({ message: 'Deleted' });
 });
 
 
