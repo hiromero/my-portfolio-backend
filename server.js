@@ -64,7 +64,7 @@ app.post('/api/details', authMiddleware, (req, res) => {
 app.delete('/api/details', authMiddleware, (req, res) => {
     fs.writeFileSync(DETAILS_PATH, '{}');
     res.json({ message: 'Details deleted' });
-}); x
+});
 
 
 const EXPERIENCE_PATH = path.join(__dirname, 'data', 'experience.json');

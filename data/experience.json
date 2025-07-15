@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "company": "Fligno",
+    "role": "Blockchain Developer Intern",
+    "location": "Blockchain Developer Intern",
+    "description": "Software Company base of operations is in Gold Coast and Brisbane, Australia. In 2017, Fligno expanded to Cagayan de Oro, Philippines and built the full stack development team. At present, Fligno has reached out to more locations in Manila and Oriental Mindoro to house more talents and solidify its footprint in the tech space.",
+    "startMonth": "Mar",
+    "startYear": "2023",
+    "endMonth": "Jun",
+    "endYear": "2023",
+    "current": false,
+    "id": "1752503999978",
+    "startMonthIndex": 2,
+    "endMonthIndex": 5,
+    "achievements": "Built block-chain smart contracts using pyteal\nImplemented user authentication and authorization\nDeveloped and maintained applications using Algorand Blockchain, and React"
+  },
+  {
+    "company": "Wela School Systems",
+    "role": "Web Developer - OJT",
+    "location": "Cagayan de Oro, Philippines",
+    "description": "Wela or Wela Online Corp. is an Education Technology company that focuses on helping the education section through innovation. In the Philippines, every teacher handles an average class size of 30 students per class. They find it hard to monitor each and every student if they are burdened with paperwork. This problem will affect the parents at the same time, parents not being updated on their child’s whereabouts when they leave their home to go to school.",
+    "startMonth": "Mar",
+    "startYear": "2022",
+    "endMonth": "Apr",
+    "endYear": "2022",
+    "current": false,
+    "id": "1752590418279",
+    "startMonthIndex": 2,
+    "endMonthIndex": 3,
+    "achievements": "Developed a school managing software using frappe framework written in python and javascript\nAssisted on email functionality into admissions page using API, enhancing communication efficiency\nDeveloped and optimized UI components for print previews and web pages"
+  }
+]
