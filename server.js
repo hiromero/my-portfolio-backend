@@ -134,6 +134,60 @@ app.delete('/api/experience/:id', authMiddleware, (req, res) => {
 });
 
 
+const EDUCATION_PATH = path.join(__dirname, 'data', 'education.json');
+function readEducation() {
+    return JSON.parse(fs.readFileSync(EDUCATION_PATH, 'utf-8'));
+}
+function writeEducation(arr) {
+    fs.writeFileSync(EDUCATION_PATH, JSON.stringify(arr, null, 2));
+}
+
+// ─── Get all education entries ─────────────────────────────
+app.get('/api/education', authMiddleware, (req, res) => {
+    const list = readEducation();
+    // sort newest first by graduation date
+    list.sort((a, b) => {
+        const da = new Date(a.graduationYear, a.graduationMonthIndex);
+        const db = new Date(b.graduationYear, b.graduationMonthIndex);
+        return db - da;
+    });
+    res.json(list);
+});
+
+// ─── Create new entry ───────────────────────────────────────
+app.post('/api/education', authMiddleware, (req, res) => {
+    const entry = req.body;
+    entry.id = Date.now().toString();
+    entry.startMonthIndex = new Date(`${entry.startMonth} 1, 2000`).getMonth();
+    entry.graduationMonthIndex = new Date(`${entry.graduationMonth} 1, 2000`).getMonth();
+    const list = readEducation();
+    list.push(entry);
+    writeEducation(list);
+    res.json(entry);
+});
+
+// ─── Update an entry ───────────────────────────────────────
+app.put('/api/education/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    const updated = req.body;
+    updated.startMonthIndex = new Date(`${updated.startMonth} 1, 2000`).getMonth();
+    updated.graduationMonthIndex = new Date(`${updated.graduationMonth} 1, 2000`).getMonth();
+    const list = readEducation().map(item =>
+        item.id === id ? { ...updated, id } : item
+    );
+    writeEducation(list);
+    res.json(updated);
+});
+
+// ─── Delete an entry ───────────────────────────────────────
+app.delete('/api/education/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    const list = readEducation().filter(item => item.id !== id);
+    writeEducation(list);
+    res.json({ message: 'Deleted' });
+});
+
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
