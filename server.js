@@ -188,6 +188,48 @@ app.delete('/api/education/:id', authMiddleware, (req, res) => {
 });
 
 
+//Skills
+
+const SKILLS_PATH = path.join(__dirname, 'data', 'skills.json');
+function readSkills() {
+    return JSON.parse(fs.readFileSync(SKILLS_PATH, 'utf-8'));
+}
+function writeSkills(arr) {
+    fs.writeFileSync(SKILLS_PATH, JSON.stringify(arr, null, 2));
+}
+
+// Get all skills
+app.get('/api/skills', authMiddleware, (req, res) => {
+    res.json(readSkills());
+});
+
+// Add a skill
+app.post('/api/skills', authMiddleware, (req, res) => {
+    const skill = { ...req.body, id: Date.now().toString() };
+    const list = readSkills();
+    list.push(skill);
+    writeSkills(list);
+    res.json(skill);
+});
+
+// Update a skill
+app.put('/api/skills/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    const updated = req.body;
+    const list = readSkills().map(s => s.id === id ? { ...updated, id } : s);
+    writeSkills(list);
+    res.json(updated);
+});
+
+// Delete a skill
+app.delete('/api/skills/:id', authMiddleware, (req, res) => {
+    const { id } = req.params;
+    writeSkills(readSkills().filter(s => s.id !== id));
+    res.json({ message: 'Deleted' });
+});
+
+
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 

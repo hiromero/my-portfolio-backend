@@ -14,5 +14,21 @@
     "id": "1752680367340",
     "startMonthIndex": 5,
     "graduationMonthIndex": 7
+  },
+  {
+    "school": "CAGAYAN DE ORO COLLEGE - PHINMA",
+    "location": "Cagayan de Oro, Philippines",
+    "startMonth": "Jun",
+    "startYear": "2012",
+    "graduationMonth": "Mar",
+    "graduationYear": "2018",
+    "level": "High School",
+    "description": "Science, Technology Engineering and Mathematics",
+    "gpa": "",
+    "maxGpa": "",
+    "activities": "With Honor",
+    "id": "1752763120148",
+    "startMonthIndex": 5,
+    "graduationMonthIndex": 2
   }
 ]
